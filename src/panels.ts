@@ -6,7 +6,8 @@ import {
   cmdDeviceDesktop,
   cmdDeviceTablet,
   cmdDeviceMobile,
-  cmdClear
+  cmdClear,
+  TARGET_PANEL_ID,
 } from './consts';
 
 export default (editor: Editor, opts: RequiredPluginOptions) => {
@@ -121,7 +122,7 @@ export default (editor: Editor, opts: RequiredPluginOptions) => {
       </svg>`
     },{
       id: ola,
-      command: ola,
+      command: "ola-override",
       label: `<svg ${iconStyle} viewBox="0 0 24 24">
           <path fill="currentColor" d="M12,16L19.36,10.27L21,9L12,2L3,9L4.63,10.27M12,18.54L4.62,12.81L3,14.07L12,21.07L21,14.07L19.37,12.8L12,18.54Z" />
       </svg>`
@@ -133,6 +134,34 @@ export default (editor: Editor, opts: RequiredPluginOptions) => {
       </svg>`
     }],
   }]);
+
+  
+
+  const panelEl = document.createElement('div');
+  panelEl.id = TARGET_PANEL_ID;
+  panelEl.className = 'my-custom-left-panel'; 
+  document.getElementById('gjs')?.appendChild(panelEl);
+  const style = document.createElement('style');
+// style.type = 'text/css';
+style.innerHTML = `
+  .my-custom-left-panel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 2000px;
+    height: 3000px;
+    background-color: #f5f5f5;
+    border-top: 1px solid #ccc;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    z-index: 1000;
+  }`;
+  document.getElementsByTagName('head')[0].appendChild(style);
+  editor.on('load', () => {
+    panelEl.style.display = 'block'; // Ensure it's visible
+    // print out editor.panels content
+  });
 
   const openBl = Panels.getButton('views', obl);
   editor.on('load', () => openBl?.set('active', true));
